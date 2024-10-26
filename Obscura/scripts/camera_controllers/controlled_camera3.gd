@@ -1,9 +1,11 @@
 class_name ControlledCamera3
 extends CameraControllerBase
 
-
+# The speed at which the camera follows the player when the player is moving. This can either be a tuned static value or a ratio of the vessel's speed.
 @export var follow_speed: float = 40
+# When the player has stopped, what speed shoud the camera move to match the vesse's position.
 @export var catchup_speed: float = 80
+# The maxiumum allowed distance between the vessel and the center of the camera.
 @export var leash_distance: float = 30
 
 
@@ -14,6 +16,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	if !current:
+		position = target.position
 		return
 	
 	if draw_camera_logic:
@@ -23,14 +26,17 @@ func _process(delta: float) -> void:
 	var distance = position.distance_to(target_position)
 	
 	if distance > leash_distance + 0.1:
+		# the distance between the vessel and the camera should never exceed leash_distance.
 		position = position.lerp(target_position, (distance - leash_distance) / distance)
-	elif distance > 0.1:
+	elif distance > 0:
 		if target.velocity != Vector3(0,0,0):
+			# follow the player at a follow_speed that is slower than the player 
 			if follow_speed * delta >= distance:
 				position = target_position
 			else:
 				position = position.lerp(target_position, follow_speed * delta / distance)
 		else:
+			# The camera will catch up to the player when the player is not moving
 			if catchup_speed * delta >= distance:
 				position = target_position
 			else:
@@ -47,6 +53,7 @@ func draw_logic() -> void:
 	mesh_instance.mesh = immediate_mesh
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	
+	# draw a 5 by 5 unit cross in the center of the screen
 	immediate_mesh.surface_begin(Mesh.PRIMITIVE_LINES, material)
 	immediate_mesh.surface_add_vertex(Vector3(0, 0, 2.5))
 	immediate_mesh.surface_add_vertex(Vector3(0, 0, -2.5))
