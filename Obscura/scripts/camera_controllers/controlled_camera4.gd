@@ -1,11 +1,13 @@
-class_name ControlledCamera3
+class_name ControlledCamera4
 extends CameraControllerBase
 
 
-@export var follow_speed: float = 40
-@export var catchup_speed: float = 80
+@export var lead_speed: float = 60
+@export var catchup_delay_duration: float = 0.1
+@export var catchup_speed: float = 60
 @export var leash_distance: float = 30
 
+var last_moved: float = 0.0
 
 func _ready() -> void:
 	super()
@@ -21,16 +23,14 @@ func _process(delta: float) -> void:
 		
 	var target_position = Vector3(target.global_position.x, position.y, target.global_position.z)
 	var distance = position.distance_to(target_position)
-	
-	if distance > leash_distance + 0.1:
-		position = position.lerp(target_position, (distance - leash_distance) / distance)
-	elif distance > 0.1:
-		if target.velocity != Vector3(0,0,0):
-			if follow_speed * delta >= distance:
-				position = target_position
-			else:
-				position = position.lerp(target_position, follow_speed * delta / distance)
-		else:
+
+	if target.velocity != Vector3.ZERO:
+		last_moved = 0.0
+		var lead_position = target_position + target.velocity.normalized() * leash_distance
+		position = position.lerp(lead_position, max(lead_speed, 10 + target.velocity.length()) * delta / position.distance_to(lead_position))
+	else:
+		last_moved += delta
+		if last_moved >= catchup_delay_duration and distance > 0.1:
 			if catchup_speed * delta >= distance:
 				position = target_position
 			else:
