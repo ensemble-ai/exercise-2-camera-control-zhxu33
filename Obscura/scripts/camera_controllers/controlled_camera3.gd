@@ -1,6 +1,7 @@
 class_name ControlledCamera3
 extends CameraControllerBase
 
+
 # The speed at which the camera follows the player when the player is moving. This can either be a tuned static value or a ratio of the vessel's speed.
 @export var follow_speed: float = 40
 # When the player has stopped, what speed shoud the camera move to match the vesse's position.
@@ -32,12 +33,14 @@ func _process(delta: float) -> void:
 		if target.velocity != Vector3(0,0,0):
 			# follow the player at a follow_speed that is slower than the player 
 			if follow_speed * delta >= distance:
+				# set to target position if too close
 				position = target_position
 			else:
 				position = position.lerp(target_position, follow_speed * delta / distance)
 		else:
-			# The camera will catch up to the player when the player is not moving
+			# The camera will catch up when the player is not moving
 			if catchup_speed * delta >= distance:
+				# set to target position if too close
 				position = target_position
 			else:
 				position = position.lerp(target_position, catchup_speed * delta / distance)

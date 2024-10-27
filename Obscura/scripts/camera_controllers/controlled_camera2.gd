@@ -1,6 +1,7 @@
 class_name ControlledCamera2
 extends CameraControllerBase
 
+
 # the top left corner of the frame border box.
 @export var top_left: Vector2 = Vector2(-10, 10)
 # the bottom right corner of the frame border box.

@@ -1,6 +1,7 @@
 class_name ControlledCamera4
 extends CameraControllerBase
 
+
 # the speed at which the camera moves toward the direction of the input. This should be faster than the Vessel's movement speed.
 @export var lead_speed: float = 60
 # the time delay between when the target stops moving and when the camera starts to catch up to the target.
@@ -40,6 +41,7 @@ func _process(delta: float) -> void:
 		# camera catchup to target
 		if last_moved >= catchup_delay_duration and distance > 0:
 			if catchup_speed * delta >= distance:
+				# set to target position if too close
 				position = target_position
 			else:
 				position = position.lerp(target_position, catchup_speed * delta / distance)

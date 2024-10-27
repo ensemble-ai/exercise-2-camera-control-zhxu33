@@ -2,7 +2,6 @@ class_name ControlledCamera1
 extends CameraControllerBase
 
 
-
 func _ready() -> void:
 	super()
 	position = target.position

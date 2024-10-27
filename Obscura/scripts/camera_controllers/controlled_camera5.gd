@@ -1,6 +1,7 @@
 class_name ControlledCamera5
 extends CameraControllerBase
 
+
 # The ratio that the camera should move toward the target when it is not at the edge of the outer pushbox.
 @export var push_ratio: float = 0.5
 # the top left corner of the push zone border box.
@@ -38,16 +39,25 @@ func _process(delta: float) -> void:
 	var speed_top = position.z + speedup_zone_top_left.y
 	var speed_bottom = position.z + speedup_zone_bottom_right.y
 	
-	# target moving
+	# target is moving
 	if target_velocity != Vector3(0,0,0):
-		if target_position.x > speed_left and target_position.x < speed_right and target_position.z < speed_top and target_position.z > speed_bottom:
-			# target is inside speedup zone
+		# target is inside speedup zone
+		if (
+			target_position.x > speed_left and target_position.x < speed_right 
+			and target_position.z < speed_top and target_position.z > speed_bottom
+		):
 			camera_movement = Vector3(0,0,0)
 		else:
 			# target is touching left or right side of push box
-			camera_movement.x = target_velocity.x * (1 if target.position.x <= push_left or target.position.x >= push_right else push_ratio)
+			if target.position.x <= push_left or target.position.x >= push_right:
+				camera_movement.x = target_velocity.x
+			else:
+				camera_movement.x = target_velocity.x * push_ratio
 			# target is touching top or down side of push box
-			camera_movement.z = target_velocity.z * (1 if target.position.z >= push_top or target.position.z <= push_bottom else push_ratio)
+			if target.position.z >= push_top or target.position.z <= push_bottom:
+				camera_movement.z = target_velocity.z
+			else:
+				camera_movement.z = target_velocity.z * push_ratio
 
 	position += camera_movement * delta
 	
