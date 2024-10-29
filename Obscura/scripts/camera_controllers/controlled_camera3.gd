@@ -26,7 +26,7 @@ func _process(delta: float) -> void:
 	var target_position = Vector3(target.global_position.x, position.y, target.global_position.z)
 	var distance = position.distance_to(target_position)
 	
-	if distance > leash_distance + 0.1:
+	if distance > leash_distance + 0.1: # add tolerance to prevent glitching
 		# the distance between the vessel and the camera should never exceed leash_distance.
 		position += (target_position - position).normalized() * (distance - leash_distance)
 	elif distance > 0:

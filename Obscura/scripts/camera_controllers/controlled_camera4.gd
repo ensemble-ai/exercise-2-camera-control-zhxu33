@@ -2,7 +2,8 @@ class_name ControlledCamera4
 extends CameraControllerBase
 
 
-# the speed at which the camera moves toward the direction of the input. This should be faster than the Vessel's movement speed.
+# the speed at which the camera moves toward the direction of the input. This should be faster than the Vessel's movement speed. 
+# note this is dynamic and changes based on the target's movement speed
 @export var lead_speed: float = 60
 # the time delay between when the target stops moving and when the camera starts to catch up to the target.
 @export var catchup_delay_duration: float = 0.1
@@ -30,16 +31,16 @@ func _process(delta: float) -> void:
 	var distance = position.distance_to(target_position)
 
 	if target.velocity != Vector3(0,0,0):
-		# target is not moving, reset last_moved
+		# target is moving, reset last_moved
 		last_moved = 0.0
-		
 		# move within leash_distance
-		if distance > leash_distance:
-			position = target_position + (position - target_position).normalized() * leash_distance
-	
-		# move to lead position with the maximum of lead_speed or target's velocity plus 10, so the camera is always ahead
 		var lead_position = target_position + target.velocity.normalized() * leash_distance
-		position += (lead_position - position).normalized() * max(lead_speed, 10 + target.velocity.length()) * delta
+		if distance > leash_distance + 0.5: # add tolerance to prevent glitching
+			position = target_position + (position - lead_position).normalized() * leash_distance
+		# change lead_speed to be always faster than the target
+		lead_speed = target.velocity.length() * 1.2
+		# move to lead position with the maximum of lead_speed or target's velocity plus 10, so the camera is always ahead
+		position += (lead_position - position).normalized() * lead_speed * delta
 	else:
 		# increment last_moved
 		last_moved += delta
