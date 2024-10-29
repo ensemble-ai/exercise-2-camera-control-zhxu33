@@ -6,11 +6,11 @@ extends CameraControllerBase
 # note this is dynamic and changes based on the target's movement speed
 @export var lead_speed: float = 60
 # the time delay between when the target stops moving and when the camera starts to catch up to the target.
-@export var catchup_delay_duration: float = 0.1
+@export var catchup_delay_duration: float = 0.25
 # When the player has stopped, what speed shoud the camera move to match the vesse's position.
 @export var catchup_speed: float = 60
 # The maxiumum allowed distance between the vessel and the center of the camera.
-@export var leash_distance: float = 15
+@export var leash_distance: float = 10
 
 var last_moved: float = 0.0
 
@@ -35,12 +35,12 @@ func _process(delta: float) -> void:
 		last_moved = 0.0
 		# move within leash_distance
 		var lead_position = target_position + target.velocity.normalized() * leash_distance
-		if distance > leash_distance + 0.5: # add tolerance to prevent glitching
-			position = target_position + (position - lead_position).normalized() * leash_distance
+		if distance > leash_distance + 1: # add tolerance to prevent glitching
+			position = position.move_toward(lead_position, leash_distance)
 		# change lead_speed to be always faster than the target
 		lead_speed = target.velocity.length() * 1.2
 		# move to lead position with the maximum of lead_speed or target's velocity plus 10, so the camera is always ahead
-		position += (lead_position - position).normalized() * lead_speed * delta
+		position = position.move_toward(lead_position, lead_speed * delta)
 	else:
 		# increment last_moved
 		last_moved += delta
@@ -48,9 +48,9 @@ func _process(delta: float) -> void:
 		if last_moved >= catchup_delay_duration and distance > 0:
 			if catchup_speed * delta >= distance:
 				# set to target position if too close
-				position = target_position
+				position = position.move_toward(target_position, distance)
 			else:
-				position += (target_position - position).normalized() * (catchup_speed * delta)
+				position = position.move_toward(target_position, catchup_speed * delta)
 
 	super(delta)
 
