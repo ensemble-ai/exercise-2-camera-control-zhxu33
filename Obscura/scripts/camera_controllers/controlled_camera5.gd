@@ -53,18 +53,31 @@ func _process(delta: float) -> void:
 				camera_movement.x = target_velocity.x
 			else:
 				camera_movement.x = target_velocity.x * push_ratio
+				
 			# target is touching top or down side of push box
 			if target.position.z >= push_top or target.position.z <= push_bottom:
 				camera_movement.z = target_velocity.z
 			else:
 				camera_movement.z = target_velocity.z * push_ratio
-
+	
+	# target is not moving
+	if target_velocity == Vector3(0,0,0):
+		# target is out of pushbox, move back inside
+		if target.position.x <= push_left:
+			target.position.x = push_left
+		if target.position.x >= push_right:
+			target.position.x = push_right
+		if target.position.z >= push_top:
+			target.position.z = push_top
+		if target.position.z <= push_bottom:
+			target.position.z = push_bottom
+			
 	position += camera_movement * delta
 	
 	super(delta)
 
 # helper function to draw outer and inner boxes
-func draw_box(immediate_mesh: ImmediateMesh, material:ORMMaterial3D, top_left: Vector2, bottom_right: Vector2) -> void:
+func draw_box(immediate_mesh: ImmediateMesh, material:ORMMaterial3D, top_left: Vector2, bottom_right: Vector2, color: Color) -> void:
 	var left = top_left.x
 	var right = bottom_right.x
 	var top = top_left.y
@@ -79,23 +92,22 @@ func draw_box(immediate_mesh: ImmediateMesh, material:ORMMaterial3D, top_left: V
 	immediate_mesh.surface_add_vertex(Vector3(left, 0, top))
 	immediate_mesh.surface_add_vertex(Vector3(right, 0, top))
 	immediate_mesh.surface_end()
+	
+	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	material.albedo_color = color
 		
 
 func draw_logic() -> void:
 	var mesh_instance := MeshInstance3D.new()
 	var immediate_mesh := ImmediateMesh.new()
-	var material := ORMMaterial3D.new()
 	
 	mesh_instance.mesh = immediate_mesh
 	mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	
 	# draw push box
-	draw_box(immediate_mesh, material, pushbox_top_left, pushbox_bottom_right)
+	draw_box(immediate_mesh, ORMMaterial3D.new(), pushbox_top_left, pushbox_bottom_right, Color.BLACK)
 	# draw speedup zone
-	draw_box(immediate_mesh, material, speedup_zone_top_left, speedup_zone_bottom_right)
-
-	material.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	material.albedo_color = Color.BLACK
+	draw_box(immediate_mesh, ORMMaterial3D.new(), speedup_zone_top_left, speedup_zone_bottom_right, Color.GOLD)
 	
 	add_child(mesh_instance)
 	mesh_instance.global_transform = Transform3D.IDENTITY

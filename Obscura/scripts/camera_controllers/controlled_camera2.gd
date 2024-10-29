@@ -25,6 +25,7 @@ func _process(delta: float) -> void:
 	
 	# box constantly moving on the z-x plane denoted by autoscroll_speed
 	position += Vector3(autoscroll_speed.x*delta, 0, autoscroll_speed.z * delta)
+	target.position += Vector3(autoscroll_speed.x*delta, 0, autoscroll_speed.z * delta)
 	
 	# If the player is lagging behind and is touching the left edge of the box, the player should be pushed forward by that box edge.
 	var left_edge = position.x + top_left.x

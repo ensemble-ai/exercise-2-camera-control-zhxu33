@@ -7,7 +7,7 @@ extends CameraControllerBase
 # When the player has stopped, what speed shoud the camera move to match the vesse's position.
 @export var catchup_speed: float = 80
 # The maxiumum allowed distance between the vessel and the center of the camera.
-@export var leash_distance: float = 30
+@export var leash_distance: float = 15
 
 
 func _ready() -> void:
@@ -28,7 +28,7 @@ func _process(delta: float) -> void:
 	
 	if distance > leash_distance + 0.1:
 		# the distance between the vessel and the camera should never exceed leash_distance.
-		position = position.lerp(target_position, (distance - leash_distance) / distance)
+		position += (target_position - position).normalized() * (distance - leash_distance)
 	elif distance > 0:
 		if target.velocity != Vector3(0,0,0):
 			# follow the player at a follow_speed that is slower than the player 
@@ -36,14 +36,14 @@ func _process(delta: float) -> void:
 				# set to target position if too close
 				position = target_position
 			else:
-				position = position.lerp(target_position, follow_speed * delta / distance)
+				position += (target_position - position).normalized() * follow_speed * delta
 		else:
 			# The camera will catch up when the player is not moving
 			if catchup_speed * delta >= distance:
 				# set to target position if too close
 				position = target_position
 			else:
-				position = position.lerp(target_position, catchup_speed * delta / distance)
+				position += (target_position - position).normalized() * catchup_speed * delta
 
 	super(delta)
 
