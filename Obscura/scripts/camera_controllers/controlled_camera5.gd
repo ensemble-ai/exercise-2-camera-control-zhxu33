@@ -53,7 +53,6 @@ func _process(delta: float) -> void:
 				camera_movement.x = target_velocity.x
 			else:
 				camera_movement.x = target_velocity.x * push_ratio
-				
 			# target is touching top or down side of push box
 			if target.position.z >= push_top or target.position.z <= push_bottom:
 				camera_movement.z = target_velocity.z

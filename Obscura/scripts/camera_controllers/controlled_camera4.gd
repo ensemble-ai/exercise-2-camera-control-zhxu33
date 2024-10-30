@@ -4,11 +4,11 @@ extends CameraControllerBase
 
 # the speed at which the camera moves toward the direction of the input. This should be faster than the Vessel's movement speed. 
 # note this is dynamic and changes based on the target's movement speed
-@export var lead_speed: float = 60
+@export var lead_speed: float = 100
 # the time delay between when the target stops moving and when the camera starts to catch up to the target.
-@export var catchup_delay_duration: float = 0.25
+@export var catchup_delay_duration: float = 0.1
 # When the player has stopped, what speed shoud the camera move to match the vesse's position.
-@export var catchup_speed: float = 60
+@export var catchup_speed: float = 75
 # The maxiumum allowed distance between the vessel and the center of the camera.
 @export var leash_distance: float = 10
 
@@ -35,10 +35,10 @@ func _process(delta: float) -> void:
 		last_moved = 0.0
 		# move within leash_distance
 		var lead_position = target_position + target.velocity.normalized() * leash_distance
-		if distance > leash_distance + 1: # add tolerance to prevent glitching
+		if distance >= leash_distance + 1: # add tolerance
 			position = position.move_toward(lead_position, leash_distance)
 		# change lead_speed to be always faster than the target
-		lead_speed = target.velocity.length() * 1.2
+		lead_speed = target.velocity.length() * 2
 		# move to lead position with the maximum of lead_speed or target's velocity plus 10, so the camera is always ahead
 		position = position.move_toward(lead_position, lead_speed * delta)
 	else:

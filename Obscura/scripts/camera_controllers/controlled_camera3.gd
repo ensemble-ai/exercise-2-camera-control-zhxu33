@@ -3,9 +3,9 @@ extends CameraControllerBase
 
 
 # The speed at which the camera follows the player when the player is moving. This can either be a tuned static value or a ratio of the vessel's speed.
-@export var follow_speed: float = 40
+@export var follow_speed: float = 25
 # When the player has stopped, what speed shoud the camera move to match the vesse's position.
-@export var catchup_speed: float = 80
+@export var catchup_speed: float = 75
 # The maxiumum allowed distance between the vessel and the center of the camera.
 @export var leash_distance: float = 10
 
@@ -26,10 +26,10 @@ func _process(delta: float) -> void:
 	var target_position = Vector3(target.global_position.x, position.y, target.global_position.z)
 	var distance = position.distance_to(target_position)
 	
-	if distance > leash_distance + 1: # add tolerance to prevent glitching
+	if distance >= leash_distance:
 		# the distance between the vessel and the camera should never exceed leash_distance.
 		position = position.move_toward(target_position, distance - leash_distance)
-	elif distance > 0:
+	if distance > 0:
 		if target.velocity != Vector3(0,0,0):
 			# follow the player at a follow_speed that is slower than the player 
 			if follow_speed * delta >= distance:
