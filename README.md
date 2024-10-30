@@ -1,5 +1,9 @@
 # Camera Control Exercise
 
+## For Peer Reviewer
+
+See [controlled_camera1.gd](https://github.com/ensemble-ai/exercise-2-camera-control-zhxu33/blob/master/Obscura/scripts/camera_controllers/controlled_camera1.gd), [controlled_camera2.gd](https://github.com/ensemble-ai/exercise-2-camera-control-zhxu33/blob/master/Obscura/scripts/camera_controllers/controlled_camera2.gd), [controlled_camera3.gd](https://github.com/ensemble-ai/exercise-2-camera-control-zhxu33/blob/master/Obscura/scripts/camera_controllers/controlled_camera3.gd), [controlled_camera4.gd](https://github.com/ensemble-ai/exercise-2-camera-control-zhxu33/blob/master/Obscura/scripts/camera_controllers/controlled_camera4.gd), [controlled_camera5.gd](https://github.com/ensemble-ai/exercise-2-camera-control-zhxu33/blob/master/Obscura/scripts/camera_controllers/controlled_camera5.gd) for Stages 1-5 Camera Code.
+
 ## Description
 
 Your goal is to create several swappable camera control scripts for a top-down terraforming simulator.
