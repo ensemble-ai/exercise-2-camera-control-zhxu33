@@ -28,7 +28,6 @@ func _process(delta: float) -> void:
 		draw_logic()
 	
 	var target_velocity = target.velocity
-	var target_position = target.position
 	var camera_movement = Vector3(0,0,0)
 	# calculate box boundaries
 	var push_left = position.x + pushbox_top_left.x
@@ -50,13 +49,12 @@ func _process(delta: float) -> void:
 			target.position.z = push_top
 		if target.position.z <= push_bottom:
 			target.position.z = push_bottom	
-		target_position = target.position
 	# target is moving
 	elif target_velocity != Vector3(0,0,0):
 		# target is inside speedup zone
 		if (
-			target_position.x > speed_left and target_position.x < speed_right 
-			and target_position.z < speed_top and target_position.z > speed_bottom
+			target.position.x > speed_left and target.position.x < speed_right 
+			and target.position.z < speed_top and target.position.z > speed_bottom
 		):
 			camera_movement = Vector3(0,0,0)
 		else:
