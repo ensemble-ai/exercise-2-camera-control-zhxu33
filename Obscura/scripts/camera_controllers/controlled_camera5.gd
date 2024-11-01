@@ -30,6 +30,7 @@ func _process(delta: float) -> void:
 	var target_velocity = target.velocity
 	var target_position = target.position
 	var camera_movement = Vector3(0,0,0)
+	# calculate box boundaries
 	var push_left = position.x + pushbox_top_left.x
 	var push_right = position.x + pushbox_bottom_right.x
 	var push_top = position.z + pushbox_top_left.y
@@ -39,8 +40,19 @@ func _process(delta: float) -> void:
 	var speed_top = position.z + speedup_zone_top_left.y
 	var speed_bottom = position.z + speedup_zone_bottom_right.y
 	
+	# target is not moving, ensure it's inside camera
+	if target_velocity == Vector3(0,0,0):
+		if target.position.x <= push_left:
+			target.position.x = push_left
+		if target.position.x >= push_right:
+			target.position.x = push_right
+		if target.position.z >= push_top:
+			target.position.z = push_top
+		if target.position.z <= push_bottom:
+			target.position.z = push_bottom	
+		target_position = target.position
 	# target is moving
-	if target_velocity != Vector3(0,0,0):
+	elif target_velocity != Vector3(0,0,0):
 		# target is inside speedup zone
 		if (
 			target_position.x > speed_left and target_position.x < speed_right 
@@ -59,18 +71,7 @@ func _process(delta: float) -> void:
 			else:
 				camera_movement.z = target_velocity.z * push_ratio
 	
-	# target is not moving
-	if target_velocity == Vector3(0,0,0):
-		# target is out of pushbox, move back inside
-		if target.position.x <= push_left:
-			target.position.x = push_left
-		if target.position.x >= push_right:
-			target.position.x = push_right
-		if target.position.z >= push_top:
-			target.position.z = push_top
-		if target.position.z <= push_bottom:
-			target.position.z = push_bottom
-			
+	# set camera movement
 	position += camera_movement * delta
 	
 	super(delta)
