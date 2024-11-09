@@ -112,7 +112,7 @@ Please refer to the first code review template on how to do a permalink.
 I couldn't find any infractions, the code looks well done, simple, and relatively easy to read. Only criticism is maybe for more comments describing the code. 
 
 #### Style Guide Exemplars ####
-[Everything was properly cased and placed.] (https://github.com/ensemble-ai/exercise-2-camera-control-zhxu33/blob/6a2c8c1422c8612aa7590b6a43bf896e5040c88b/Obscura/scripts/camera_controllers/controlled_camera1.gd#L25)
+[Everything was properly cased and placed.](https://github.com/ensemble-ai/exercise-2-camera-control-zhxu33/blob/6a2c8c1422c8612aa7590b6a43bf896e5040c88b/Obscura/scripts/camera_controllers/controlled_camera1.gd#L25)
 ___
 #### Put style guide infractures ####
 
@@ -133,4 +133,4 @@ This should be similar to the Code Style justification.
 Again, no infractions from what I could tell, everything seems be done correctly and well. 
 
 #### Best Practices Exemplars ####
-[All classes and functions are done properly.] (https://github.com/ensemble-ai/exercise-2-camera-control-zhxu33/blob/6a2c8c1422c8612aa7590b6a43bf896e5040c88b/Obscura/scripts/camera_controllers/controlled_camera1.gd#L24) 
+[All classes and functions are done properly.](https://github.com/ensemble-ai/exercise-2-camera-control-zhxu33/blob/6a2c8c1422c8612aa7590b6a43bf896e5040c88b/Obscura/scripts/camera_controllers/controlled_camera1.gd#L24) 
